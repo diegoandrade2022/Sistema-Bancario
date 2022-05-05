@@ -78,6 +78,9 @@ module.exports = {
             if (!numero_conta_origem || !numero_conta_destino || valor === undefined || !senha) {
                 return res.status(400).json({ mensagem: 'A conta de origem e de destino, senha da conta de origem e valor da transferência são obrigatórios' });
             }
+            if (numero_conta_origem === numero_conta_destino) {
+                return res.status(400).json({ mensagem: 'Conta de Origem e Destino são iguais' });
+            }
             if (valor <= 0) {
                 return res.status(400).json({ mensagem: 'Valor inválido' });
             }
@@ -97,9 +100,7 @@ module.exports = {
             if (!contaD) {
                 return res.status(400).json({ mensagem: 'Conta Destino inexistente' });
             }
-            if (contaO.numeroConta === contaD.numeroConta) {
-                return res.status(400).json({ mensagem: 'Conta de Origem e Destino são iguais' });
-            }
+
 
             contaO.saldo -= valor;
             contaD.saldo += valor;

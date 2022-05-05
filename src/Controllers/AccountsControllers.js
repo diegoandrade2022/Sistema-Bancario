@@ -50,15 +50,8 @@ module.exports = {
     },
     update(req, res) {
         try {
-            let inputConta = req.params.numeroConta;
-
-            let contas = bancoDeDados.contas.find(conta => conta.numeroConta == inputConta);
-
-            if (!contas) {
-                return res.status(404).json({ mensagem: 'Conta não encontrada' });
-            }
-
             let input = { ...req.body };
+            let inputConta = req.params.numeroConta;
 
             let retorno = validateInputData(input);
 
@@ -72,9 +65,26 @@ module.exports = {
                 return res.status(400).json(retorno.mensagem);
             }
 
-            retorno = validateExistenceEmailAndCpf(bancoDeDados, input);
-            if (retorno) {
-                return res.status(400).json(retorno.mensagem);
+            let contas = bancoDeDados.contas.find(conta => conta.numeroConta == inputConta);
+
+            if (!contas) {
+                return res.status(404).json({ mensagem: 'Conta não encontrada' });
+            }
+
+            if (input.cpf !== contas.cpf) {
+                const existCpf = bancoDeDados.contas.find(conta => conta.cpf == input.cpf);
+
+                if (existCpf) {
+                    return res.status(400).json({ mensagem: 'CPF já cadastrado' });
+                }
+            }
+
+            if (input.email !== contas.email) {
+                const existEmail = bancoDeDados.contas.find(conta => conta.email == input.email);
+
+                if (existEmail) {
+                    return res.status(400).json({ mensagem: 'Email já cadastrado' });
+                }
             }
 
             contas.nome = input.nome;
