@@ -171,8 +171,18 @@ module.exports = {
 
             const depositos = bancoDeDados.depositos.filter(deposito => deposito.numeroConta == input.numero_conta);
             const saques = bancoDeDados.saques.filter(saque => saque.numeroConta == input.numero_conta);
-            const transferenciasEnviadas = bancoDeDados.transferencias.filter(transferencia => transferencia.numeroContaOrigem == input.numero_conta);
-            const transferenciasRecebidas = bancoDeDados.transferencias.filter(transferencia => transferencia.numeroContaDestino == input.numero_conta);
+
+            let transferenciasEnviadas = [];
+
+            let transferenciasRecebidas = [];
+
+            bancoDeDados.transferencias.forEach((transferencia) => {
+                if (transferencia.numeroContaOrigem === input.numero_conta) {
+                    transferenciasEnviadas.push(transferencia);
+                } else if (transferencia.numeroContaDestino === input.numero_conta) {
+                    transferenciasRecebidas.push(transferencia);
+                }
+            });
 
             return res.status(200).json({
                 "depositos": depositos,
