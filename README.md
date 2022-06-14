@@ -92,6 +92,7 @@ Obs.: A lista abaixo é para consulta, **não** significa que todos os ***status
 
 - express
 - date-fns
+- uuid
 - nodemon
 
 
